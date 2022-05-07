@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import AddTodo from './components/AddTodo';
 import DateHead from './components/DateHead';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import Empty from './components/Empty';
 import TodoList from './components/TodoList';
+import todosStorage from './storages/todosStorage';
 
 function App() {
   const today = new Date();
@@ -15,6 +16,16 @@ function App() {
     {id: 2, text: '리액트 네이티브 기초 공부', done: false},
     {id: 3, text: '투두리스트 만들어보기', done: false},
   ]);
+
+  //불러오기
+  useEffect(() => {
+    todosStorage.get().then(setTodos).catch(console.error);
+  }, []);
+
+  //저장
+  useEffect(() => {
+    todosStorage.set(todos).catch(console.error);
+  }, [todos]);
 
   const onInsert = text => {
     //새로 등록할 항목의 id를 구함
@@ -30,11 +41,27 @@ function App() {
     setTodos(todos.concat(todo));
   };
 
+  const onToggle = id => {
+    const nextTodos = todos.map(todo =>
+      todo.id === id ? {...todo, done: !todo.done} : todo,
+    );
+    setTodos(nextTodos);
+  };
+
+  const onRemove = id => {
+    const nextTodos = todos.filter(todo => todo.id !== id);
+    setTodos(nextTodos);
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView edges={['bottom']} style={styles.block}>
         <DateHead date={today} />
-        {todos.length === 0 ? <Empty /> : <TodoList todos={todos} />}
+        {todos.length === 0 ? (
+          <Empty />
+        ) : (
+          <TodoList todos={todos} onToggle={onToggle} onRemove={onRemove} />
+        )}
         <AddTodo onInsert={onInsert} />
         {/* //ios 기준
          <KeyboardAvoidingView
