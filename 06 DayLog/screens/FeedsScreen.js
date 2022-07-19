@@ -1,40 +1,31 @@
-import React from 'react';
-import {StyleSheet, View, TextInput} from 'react-native';
-import {useContext} from 'react/cjs/react.production.min';
+import React, {useContext, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import FeedList from '../components/FeedList';
+import FloatingWriteButton from '../components/FloatingWriteButton';
 import LogContext from '../contexts/LogContext';
 
 function FeedsScreen() {
-  const {text, setText} = useContext(LogContext);
+  const logs = useContext(LogContext);
+  const [hidden, setHidden] = useState(false);
+  //console.log(JSON.stringify(logs, null, 2));
+
+  const onScrolledToBottom = isBottom => {
+    if (hidden !== isBottom) {
+      setHidden(isBottom);
+    }
+  };
+
   return (
     <View style={styles.block}>
-      <TextInput
-        value={text}
-        onChangeText={setText}
-        placeholder="텍스트를 입력하세요."
-        style={styles.input}
-      />
-      {/* <Box>{value => <Text>{value}</Text>}</Box> */}
-      {/* <Box>
-        <Text>1</Text>
-      </Box>
-      <Box>
-        <Text>2</Text>
-      </Box>
-      <Box>
-        <Text>3</Text>
-      </Box> */}
+      <FeedList logs={logs} onScrolledToBottom={onScrolledToBottom} />
+      <FloatingWriteButton hidden={hidden} />
     </View>
   );
 }
 
-// function Box({children}) {
-//   return <View style={styles.box}>{children('Hello')}</View>;
-// }
-
 const styles = StyleSheet.create({
-  box: {
-    borderWidth: 2,
-    backgroundColor: 'white',
+  block: {
+    flex: 1,
   },
 });
 

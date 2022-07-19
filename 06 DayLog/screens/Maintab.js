@@ -10,14 +10,15 @@ const Tab = createBottomTabNavigator();
 function MainTab() {
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        showLabel: false,
-        activeTintColor: '#009688',
-      }}>
+      tabBarOptions={
+        //탭 이름이 하단에 보이지 않게, 활성화된 탭 색상설정
+        {showLabel: false, activeTintColor: '#009688'}
+      }>
       <Tab.Screen
         name="Feeds"
         component={FeedsScreen}
         options={{
+          //tab 아이콘 옵션
           tabBarIcon: ({color, size}) => (
             <Icon name="view-stream" size={size} color={color} />
           ),

@@ -13,7 +13,11 @@ function RootStack() {
         component={MainTab}
         options={{headerShown: false}} //헤더 중첩 방지
       />
-      <Stack.Screen name="Write" component={WriteScreen} />
+      <Stack.Screen
+        name="Write"
+        component={WriteScreen}
+        options={{headerShown: false}} //헤더 숨기기
+      />
     </Stack.Navigator>
   );
 }
